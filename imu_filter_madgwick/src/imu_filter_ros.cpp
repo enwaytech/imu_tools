@@ -30,10 +30,7 @@
 #include <tf2/LinearMath/Matrix3x3.h>
 
 ImuFilterRos::ImuFilterRos(ros::NodeHandle nh, ros::NodeHandle nh_private)
-    : nh_(nh),
-      nh_private_(nh_private),
-      initialized_(false),
-      tf_listener_(tf_buffer_)
+    : nh_(nh), nh_private_(nh_private), initialized_(false)
 {
     ROS_INFO("Starting ImuFilter");
 
@@ -428,7 +425,6 @@ void ImuFilterRos::publishOrientationFiltered(
     // apply yaw offsets
     applyYawOffset(q0, q1, q2, q3);
 
-    // create and publish filtered pose message
     geometry_msgs::PoseStamped pose_msg;
     pose_msg.header.stamp = imu_msg_raw->header.stamp;
     pose_msg.header.frame_id = imu_frame_;
@@ -437,24 +433,6 @@ void ImuFilterRos::publishOrientationFiltered(
     pose_msg.pose.orientation.y = q2;
     pose_msg.pose.orientation.z = q3;
 
-    // // get the current transform from the imu frame to the world frame
-    // geometry_msgs::TransformStamped transform;
-    // try
-    // {
-    //     transform = tf_buffer_.lookupTransform(fixed_frame_, imu_frame_,
-    //                                            imu_msg_raw->header.stamp);
-    // } catch (tf2::TransformException& ex)
-    // {
-    //     ROS_WARN("%s", ex.what());
-    //     return;
-    // }
-    // // transform.header.frame_id = fixed_frame_;
-    // // transform.child_frame_id = imu_frame_;
-
-    // set the pose position to the current transform
-    // pose_msg.pose.position.x = transform.transform.translation.x;
-    // pose_msg.pose.position.y = transform.transform.translation.y;
-    // pose_msg.pose.position.z = transform.transform.translation.z;
     pose_msg.pose.position.x = 0.0;
     pose_msg.pose.position.y = 0.0;
     pose_msg.pose.position.z = 0.0;
