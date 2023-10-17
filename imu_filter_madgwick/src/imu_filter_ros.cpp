@@ -26,6 +26,7 @@
 #include "imu_filter_madgwick/stateless_orientation.h"
 #include "geometry_msgs/TransformStamped.h"
 #include "geometry_msgs/PoseStamped.h"
+#include "nav_msgs/Odometry.h"
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 
@@ -413,29 +414,20 @@ void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
         rpy.header = imu_msg_raw->header;
         rpy_filtered_debug_publisher_.publish(rpy);
 
-        publishOrientationFiltered(imu_msg_raw);
+        publishOrientationFiltered(imu_msg);
     }
 }
 
-void ImuFilterRos::publishOrientationFiltered(
-    const ImuMsg::ConstPtr& imu_msg_raw)
+void ImuFilterRos::publishOrientationFiltered(const ImuMsg::ConstPtr& imu_msg)
 {
-    double q0, q1, q2, q3;
-    filter_.getOrientation(q0, q1, q2, q3);
-    // apply yaw offsets
-    applyYawOffset(q0, q1, q2, q3);
+    // nav_msgs::Odometry pose_msg;
+    // pose_msg.header = imu_msg->header;
+    // pose_msg.child_frame_id = imu_frame_;
+    // pose_msg.pose.pose.orientation = imu_msg->orientation;
 
     geometry_msgs::PoseStamped pose_msg;
-    pose_msg.header.stamp = imu_msg_raw->header.stamp;
-    pose_msg.header.frame_id = imu_frame_;
-    pose_msg.pose.orientation.w = q0;
-    pose_msg.pose.orientation.x = q1;
-    pose_msg.pose.orientation.y = q2;
-    pose_msg.pose.orientation.z = q3;
-
-    pose_msg.pose.position.x = 0.0;
-    pose_msg.pose.position.y = 0.0;
-    pose_msg.pose.position.z = 0.0;
+    pose_msg.header = imu_msg->header;
+    pose_msg.pose.orientation = imu_msg->orientation;
 
     orientation_filtered_publisher_.publish(pose_msg);
 }

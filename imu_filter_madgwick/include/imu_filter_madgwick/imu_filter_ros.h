@@ -112,7 +112,7 @@ class ImuFilterRos
     void imuCallback(const ImuMsg::ConstPtr& imu_msg_raw);
 
     void publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw);
-    void publishOrientationFiltered(const ImuMsg::ConstPtr& imu_msg_raw);
+    void publishOrientationFiltered(const ImuMsg::ConstPtr& imu_msg);
     void publishTransform(const ImuMsg::ConstPtr& imu_msg_raw);
 
     void publishRawMsg(const ros::Time& t, float roll, float pitch, float yaw);
