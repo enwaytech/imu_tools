@@ -128,7 +128,7 @@ ImuFilterRos::ImuFilterRos(ros::NodeHandle nh, ros::NodeHandle nh_private)
 
         orientation_filtered_publisher_ =
             nh_private.advertise<geometry_msgs::PoseStamped>(
-                "orientation_filtered", 5);
+                ros::names::resolve("imu") + "/orientation_filtered", 5);
     }
 
     // **** register subscribers
