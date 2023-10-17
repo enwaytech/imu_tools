@@ -12,10 +12,10 @@
     output="screen"> -->
   <node pkg="imu_filter_madgwick" type="imu_filter_node" name="back_right_madgwick"
     output="screen">
-
-    <remap from="/imu/data_raw" to="/sensors/inertial/back_right/imu_corrected" />
-    <remap from="/imu/data" to="/sensors/inertial/back_right/imu_orientation" />
-    <remap from="~orientation_filtered" to="/sensors/inertial/back_right/orientation_filtered" />
+    <!-- remap all the topics that use the imu namespace in the code-->
+    <remap from="imu" to="/sensors/inertial/back_right"/>
+    <remap from="/sensors/inertial/back_right/data_raw" to="/sensors/inertial/back_right/imu_corrected" />
+    <remap from="/sensors/inertial/back_right/data" to="/sensors/inertial/back_right/imu_orientation" />
 
     <param name="world_frame" value="enu"/>
     <param name="use_mag" value="false"/>
@@ -39,6 +39,11 @@
 
   <node pkg="imu_filter_madgwick" type="imu_filter_node" name="back_left_madgwick"
     output="screen">
+
+    <!-- remap all the topics that use the imu namespace in the code-->
+    <remap from="imu" to="/sensors/inertial/back_left"/>
+    <remap from="/sensors/inertial/back_left/data_raw" to="/sensors/inertial/back_left/imu_corrected" />
+    <remap from="/sensors/inertial/back_left/data" to="/sensors/inertial/back_left/imu_orientation" />
 
     <remap from="/imu/data_raw" to="/sensors/inertial/back_left/imu_corrected" />
     <remap from="/imu/data" to="/sensors/inertial/back_left/imu_orientation" />
