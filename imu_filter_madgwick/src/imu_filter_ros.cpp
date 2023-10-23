@@ -31,7 +31,10 @@
 #include <tf2/LinearMath/Matrix3x3.h>
 
 ImuFilterRos::ImuFilterRos(ros::NodeHandle nh, ros::NodeHandle nh_private)
-    : nh_(nh), nh_private_(nh_private), initialized_(false)
+    : nh_(nh),
+      nh_private_(nh_private),
+      initialized_(false),
+      tf_listener_(tf_buffer_)
 {
     ROS_INFO("Starting ImuFilter");
 
@@ -426,8 +429,25 @@ void ImuFilterRos::publishOrientationFiltered(const ImuMsg::ConstPtr& imu_msg)
     // pose_msg.pose.pose.orientation = imu_msg->orientation;
 
     geometry_msgs::PoseStamped pose_msg;
-    pose_msg.header = imu_msg->header;
+    pose_msg.header.stamp = imu_msg->header.stamp;
+    pose_msg.header.frame_id = fixed_frame_;
     pose_msg.pose.orientation = imu_msg->orientation;
+
+    // get the current transform from the fixed frame to the imu frame
+    geometry_msgs::TransformStamped transform;
+    try
+    {
+        transform = tf_buffer_.lookupTransform(
+            fixed_frame_, imu_msg->header.frame_id, imu_msg->header.stamp);
+    } catch (tf2::TransformException& ex)
+    {
+        ROS_WARN("%s", ex.what());
+        return;
+    }
+
+    pose_msg.pose.position.x = transform.transform.translation.x;
+    pose_msg.pose.position.y = transform.transform.translation.y;
+    pose_msg.pose.position.z = transform.transform.translation.z;
 
     orientation_filtered_publisher_.publish(pose_msg);
 }
