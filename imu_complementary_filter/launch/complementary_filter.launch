@@ -7,25 +7,48 @@
 
   #### IMU Driver ###########################################################
 
-  <node pkg="nodelet" type="nodelet" name="PhidgetsImuNodelet"
+  <!-- <node pkg="nodelet" type="nodelet" name="PhidgetsImuNodelet"
     args="load phidgets_imu/PhidgetsImuNodelet imu_manager"
     output="screen">
 
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
     <param name="period" value="4"/>
 
-  </node>
+  </node> -->
 
   #### Complementary filter
 
   <node pkg="imu_complementary_filter" type="complementary_filter_node"
-      name="complementary_filter_gain_node" output="screen">
-    <param name="do_bias_estimation" value="true"/>
+      name="back_right_complementary" output="screen">
+
+    <remap from="imu" to="/sensors/inertial/back_right_comp"/>
+    <remap from="/sensors/inertial/back_right_comp/data_raw" to="/sensors/inertial/back_right/imu_corrected" />
+    <remap from="/sensors/inertial/back_right_comp/data" to="/sensors/inertial/back_right/imu_orientation_comp" />
+
+
+    <param name="do_bias_estimation" value="false"/>
     <param name="do_adaptive_gain" value="true"/>
     <param name="use_mag" value="false"/>
     <param name="gain_acc" value="0.01"/>
     <param name="gain_mag" value="0.01"/>
+    <param name="publish_debug_topics" value="true"/>
 
+  </node>
+
+  <node pkg="imu_complementary_filter" type="complementary_filter_node"
+      name="back_left_complementary" output="screen">
+
+    <remap from="imu" to="/sensors/inertial/back_left_comp"/>
+    <remap from="/sensors/inertial/back_left_comp/data_raw" to="/sensors/inertial/back_left/imu_corrected" />
+    <remap from="/sensors/inertial/back_left_comp/data" to="/sensors/inertial/back_left/imu_orientation_comp" />
+
+
+    <param name="do_bias_estimation" value="false"/>
+    <param name="do_adaptive_gain" value="true"/>
+    <param name="use_mag" value="false"/>
+    <param name="gain_acc" value="0.01"/>
+    <param name="gain_mag" value="0.01"/>
+    <param name="publish_debug_topics" value="true"/>
 
   </node>
 </launch>
