@@ -274,9 +274,10 @@ void ImuFilter::madgwickAHRSupdateIMU(float gx, float gy, float gz, float ax,
     float s0, s1, s2, s3;
     float qDot1, qDot2, qDot3, qDot4;
 
-    // Rate of change of quaternion from gyroscope
-    orientationChangeFromGyro(q0, q1, q2, q3, gx, gy, gz, qDot1, qDot2, qDot3,
-                              qDot4);
+    // // Rate of change of quaternion from gyroscope
+    // orientationChangeFromGyro(q0, q1, q2, q3, gx, gy, gz, qDot1, qDot2,
+    // qDot3,
+    //                           qDot4);
 
     // Compute feedback only if accelerometer measurement valid (avoids NaN in
     // accelerometer normalisation)
@@ -312,11 +313,22 @@ void ImuFilter::madgwickAHRSupdateIMU(float gx, float gy, float gz, float ax,
 
         normalizeQuaternion(s0, s1, s2, s3);
 
+        compensateGyroDrift(q0, q1, q2, q3, s0, s1, s2, s3, dt, zeta_, w_bx_,
+                            w_by_, w_bz_, gx, gy, gz);
+
+        // Rate of change of quaternion from gyroscope
+        orientationChangeFromGyro(q0, q1, q2, q3, gx, gy, gz, qDot1, qDot2,
+                                  qDot3, qDot4);
+
         // Apply feedback step
         qDot1 -= gain_ * s0;
         qDot2 -= gain_ * s1;
         qDot3 -= gain_ * s2;
         qDot4 -= gain_ * s3;
+    } else
+    {
+        orientationChangeFromGyro(q0, q1, q2, q3, gx, gy, gz, qDot1, qDot2,
+                                  qDot3, qDot4);
     }
 
     // Integrate rate of change of quaternion to yield quaternion
