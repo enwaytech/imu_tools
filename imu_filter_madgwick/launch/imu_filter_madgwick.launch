@@ -17,6 +17,9 @@
     <remap from="/sensors/inertial/back_right/data_raw" to="/sensors/inertial/back_right/imu_corrected" />
     <remap from="/sensors/inertial/back_right/data" to="/sensors/inertial/back_right/imu_orientation" />
 
+    <param name="gain" value="0.05"/>
+    <param name="zeta" value="0.0"/>
+
     <param name="world_frame" value="enu"/>
     <param name="use_mag" value="false"/>
     <param name="fixed_frame" value="odom"/>
@@ -25,7 +28,7 @@
     <param name="publish_debug_topics" value="true"/>
     <param name="remove_gravity_vector" value="false"/>
 
-    <param name="orientation_stddev" value="0.707"/>
+    <param name="orientation_stddev" value="50.0"/>
 
     <!-- params with default values -->
     <param name="stateless" value="false"/>
@@ -49,6 +52,9 @@
     <remap from="/imu/data" to="/sensors/inertial/back_left/imu_orientation" />
     <remap from="~orientation_filtered" to="/sensors/inertial/back_left/orientation_filtered" />
 
+    <param name="gain" value="0.05"/>
+    <param name="zeta" value="0.0"/>
+
     <param name="world_frame" value="enu"/>
     <param name="use_mag" value="false"/>
     <param name="fixed_frame" value="odom"/>
@@ -57,7 +63,7 @@
     <param name="publish_debug_topics" value="true"/>
     <param name="remove_gravity_vector" value="false"/>
 
-    <param name="orientation_stddev" value="0.707"/>
+    <param name="orientation_stddev" value="50.0"/>
 
     <!-- params with default values -->
     <param name="stateless" value="false"/>
