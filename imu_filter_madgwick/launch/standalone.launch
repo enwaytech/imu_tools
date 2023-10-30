@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="nodelet_name" default="imu_madgwick_filter" />
+  <arg name="enable_front_imus" default="false" doc="Enable Madgwick filter for the front IMUs"/>
+
+  <arg name="gdb" default="false" />
+  <arg name="callgrind" default="false" />
+
+  <arg if="$(arg gdb)" name="prefix" value="gdb -ex run --args" />
+  <arg if="$(arg callgrind)" name="prefix" value="valgrind --tool=callgrind --instr-atstart=no" />
+  <param if="$(arg callgrind)" name="/bond_disable_heartbeat_timeout" value="true" />
+  <arg if="$(eval not callgrind and not gdb)" name="prefix" value="" />
+
+  <arg name="manager" value="$(arg nodelet_name)_manager" />
+
+  <group ns="imu_madgwick_filter">
+    <node pkg="nodelet" type="nodelet" name="$(arg manager)" args="manager" launch-prefix="$(arg prefix)" />
+
+    <include file="$(find imu_filter_madgwick)/launch/nodelet.launch">
+      <arg name="manager" value="$(arg manager)" />
+      <arg name="nodelet_name" value="back_right" />
+    </include>
+
+    <include file="$(find imu_filter_madgwick)/launch/nodelet.launch">
+      <arg name="manager" value="$(arg manager)" />
+      <arg name="nodelet_name" value="back_left" />
+    </include>
+
+    <group if="$(arg enable_front_imus)">
+      <include file="$(find imu_filter_madgwick)/launch/nodelet.launch">
+        <arg name="manager" value="$(arg manager)" />
+        <arg name="nodelet_name" value="front_right" />
+      </include>
+
+      <include file="$(find imu_filter_madgwick)/launch/nodelet.launch">
+        <arg name="manager" value="$(arg manager)" />
+        <arg name="nodelet_name" value="front_left" />
+      </include>
+    </group>
+  </group>
+</launch>

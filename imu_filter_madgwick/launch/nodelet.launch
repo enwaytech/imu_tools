@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="manager" />
+  <arg name="nodelet_name" default="imu_madgwick_filter" />
+
+  <node pkg="nodelet" type="nodelet" name="$(arg nodelet_name)"
+        args="load imu_filter_madgwick/ImuFilterNodelet $(arg manager)">
+    <!-- remap all the topics that use the imu namespace in the code-->
+    <remap from="imu" to="/sensors/inertial/$(arg nodelet_name)"/>
+    <remap from="/sensors/inertial/$(arg nodelet_name)/data_raw" to="/sensors/inertial/$(arg nodelet_name)/imu_corrected" />
+    <remap from="/sensors/inertial/$(arg nodelet_name)/data" to="/sensors/inertial/$(arg nodelet_name)/imu_orientation" />
+  </node>
+</launch>
