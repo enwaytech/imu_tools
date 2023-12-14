@@ -29,12 +29,12 @@
     <group if="$(arg enable_front_imus)">
       <include file="$(find imu_filter_madgwick)/launch/nodelet.launch">
         <arg name="manager" value="$(arg manager)" />
-        <arg name="nodelet_name" value="front_right" />
+        <arg name="nodelet_name" value="front_mid_top" />
       </include>
 
       <include file="$(find imu_filter_madgwick)/launch/nodelet.launch">
         <arg name="manager" value="$(arg manager)" />
-        <arg name="nodelet_name" value="front_left" />
+        <arg name="nodelet_name" value="front_mid_bottom" />
       </include>
     </group>
   </group>
